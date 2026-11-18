@@ -31,4 +31,7 @@ public abstract class AlatCamping {
     public String getNamaAlat() {
         return namaAlat;
     }
+    public double getHargaSewaPerHari() {
+    return hargaSewaPerHari;
+}
 }
