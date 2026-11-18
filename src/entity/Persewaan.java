@@ -6,30 +6,31 @@ import java.util.List;
  *
  * @author Maria
  */
-public class Penyewaan {
-    private String idPenyewaan;
+public class Persewaan {
+    private String idPersewaan;
     private LocalDate tanggalSewa;
     private LocalDate tanggalKembali;
-    private List<DetailPenyewaan> daftarDetail;
+    private List<DetailPersewaan> daftarDetail;
 
-    public Penyewaan(String idPenyewaan, LocalDate tanggalSewa, LocalDate tanggalKembali) {
-        this.idPenyewaan = idPenyewaan;
+    public Persewaan(String idPersewaan, LocalDate tanggalSewa, LocalDate tanggalKembali) {
+        this.idPersewaan = idPersewaan;
         this.tanggalSewa = tanggalSewa;
         this.tanggalKembali = tanggalKembali;
         this.daftarDetail = new ArrayList<>();
     }
-    //Menambahkan item alat ke dalam daftar detail transaksi penyewaan
+    
+    // Menambahkan item alat ke dalam daftar detail transaksi persewaan
     public void tambahDetail(AlatCamping alat, int jumlah) {
-        DetailPenyewaan detail = new DetailPenyewaan(jumlah, alat);
+        DetailPersewaan detail = new DetailPersewaan(jumlah, alat);
         daftarDetail.add(detail);
     }
 
-    //Menghitung akumulasi total keseluruhan biaya sewa dari semua item alat
+    // Menghitung akumulasi total keseluruhan biaya sewa dari semua item alat
     public double hitungTotalBiaya() {
         double total = 0;
-        for (DetailPenyewaan detail : daftarDetail) {
+        for (DetailPersewaan detail : daftarDetail) {
             total += detail.getSubTotal();
         }
         return total;
     }
-    }
+}
