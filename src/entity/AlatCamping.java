@@ -5,7 +5,6 @@ package entity;
  * @author Maria
  */
 /*
- * ATRIBUSI PENGGUNAAN AI GENERATIF:
  * Dibantu oleh AI untuk menyusun dokumentasi method dan struktur abstract class.
  */
 public abstract class AlatCamping {
@@ -33,5 +32,9 @@ public abstract class AlatCamping {
     }
     public double getHargaSewaPerHari() {
     return hargaSewaPerHari;
-}
+    }
+    
+    public int getStok() {
+    return stok;
+    }
 }
