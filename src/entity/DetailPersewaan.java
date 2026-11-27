@@ -1,12 +1,17 @@
 package entity;
+
 import eksepsi.*;
+
 /**
- *
+ * Merepresentasikan satu baris rincian perlengkapan pada transaksi persewaan SIPACAMP.
  * @author Maria
  */
 public class DetailPersewaan {
+
     private int jumlah;
     private double subTotal;
+
+    // ASOSIASI: objek AlatCamping dibuat di luar dan dirujuk pada baris detail ini
     private AlatCamping alatCamping;
 
     public DetailPersewaan(int jumlah, AlatCamping alatCamping)
@@ -36,6 +41,10 @@ public class DetailPersewaan {
     // Menghitung total harga sewa per item alat berdasarkan jumlah sewa
     public double hitungSubTotal() {
         return this.jumlah * alatCamping.getHargaSewaPerHari();
+    }
+
+    public String baris() {
+        return jumlah + "x " + alatCamping.getNamaAlat() + " (Rp" + subTotal + ")";
     }
 
     public double getSubTotal() {

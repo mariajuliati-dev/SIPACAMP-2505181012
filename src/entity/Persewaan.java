@@ -1,42 +1,4 @@
-//package entity;
-//import java.time.LocalDate;
-//import java.util.ArrayList;
-//import java.util.List;
-///**
-// *
-// * @author Maria
-// */
-//public class Persewaan {
-//    private String idPersewaan;
-//    private LocalDate tanggalSewa;
-//    private LocalDate tanggalKembali;
-//    private List<DetailPersewaan> daftarDetail;
-//
-//    public Persewaan(String idPersewaan, LocalDate tanggalSewa, LocalDate tanggalKembali) {
-//        this.idPersewaan = idPersewaan;
-//        this.tanggalSewa = tanggalSewa;
-//        this.tanggalKembali = tanggalKembali;
-//        this.daftarDetail = new ArrayList<>();
-//    }
-//    
-//    // Menambahkan item alat ke dalam daftar detail transaksi persewaan
-//    public void tambahDetail(AlatCamping alat, int jumlah) {
-//        DetailPersewaan detail = new DetailPersewaan(jumlah, alat);
-//        daftarDetail.add(detail);
-//    }
-//
-//    // Menghitung akumulasi total keseluruhan biaya sewa dari semua item alat
-//    public double hitungTotalBiaya() {
-//        double total = 0;
-//        for (DetailPersewaan detail : daftarDetail) {
-//            total += detail.getSubTotal();
-//        }
-//        return total;
-//    }
-//}
-
 package entity;
-
 import eksepsi.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -45,17 +7,34 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Merepresentasikan transaksi persewaan perlengkapan camping pada SIPACAMP.
  * @author Maria
  */
 public class Persewaan {
+
     private String idPersewaan;
     private LocalDate tanggalSewa;
     private LocalDate tanggalKembali;
+
+    // ASOSIASI: pihak penyewa dan petugas dirujuk dari luar
+    private String namaPenyewa;
+    private String namaPetugas;
+
+    // KOMPOSISI: daftar detail dibuat di dalam Persewaan dan ikut terhapus bersamanya
     private List<DetailPersewaan> daftarDetail;
 
     public Persewaan(String idPersewaan, LocalDate tanggalSewa, LocalDate tanggalKembali)
             throws PeriodeSewaTidakValidException {
+        this(idPersewaan, tanggalSewa, tanggalKembali, "-", "-");
+    }
+
+    public Persewaan(
+            String idPersewaan,
+            LocalDate tanggalSewa,
+            LocalDate tanggalKembali,
+            String namaPenyewa,
+            String namaPetugas
+    ) throws PeriodeSewaTidakValidException {
         if (tanggalSewa == null || tanggalKembali == null) {
             throw new PeriodeSewaTidakValidException(
                     "Tanggal sewa dan tanggal kembali wajib diisi terlebih dahulu.");
@@ -67,6 +46,8 @@ public class Persewaan {
         this.idPersewaan = idPersewaan;
         this.tanggalSewa = tanggalSewa;
         this.tanggalKembali = tanggalKembali;
+        this.namaPenyewa = namaPenyewa;
+        this.namaPetugas = namaPetugas;
         this.daftarDetail = new ArrayList<>();
     }
 
@@ -81,6 +62,15 @@ public class Persewaan {
     public long hitungDurasiHari() {
         long selisihHari = ChronoUnit.DAYS.between(tanggalSewa, tanggalKembali);
         return Math.max(1L, selisihHari);
+    }
+
+    public void kembalikan() {
+        this.tanggalKembali = LocalDate.now();
+    }
+
+    public long hitungHariTerlambat() {
+        long selisih = ChronoUnit.DAYS.between(tanggalKembali, LocalDate.now());
+        return Math.max(0L, selisih);
     }
 
     // Menghitung akumulasi total biaya sewa seluruh item dikalikan durasi hari
@@ -102,6 +92,14 @@ public class Persewaan {
 
     public LocalDate getTanggalKembali() {
         return tanggalKembali;
+    }
+
+    public String getNamaPenyewa() {
+        return namaPenyewa;
+    }
+
+    public String getNamaPetugas() {
+        return namaPetugas;
     }
 
     public List<DetailPersewaan> getDaftarDetail() {

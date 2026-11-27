@@ -1,13 +1,9 @@
 package entity;
 import java.io.Serializable;
 /**
- *
+ * Kelas induk abstrak untuk perlengkapan camping pada SIPACAMP.
  * @author Maria
  */
-/*
- * Dibantu oleh AI untuk menyusun dokumentasi method dan struktur abstract class.
- */
-
 public abstract class AlatCamping implements Serializable {
     private static final long serialVersionUID = 1L;
     protected String kodeAlat;
@@ -24,24 +20,33 @@ public abstract class AlatCamping implements Serializable {
         this.status = status;
     }
     
-    //Menghitung biaya perawatan alat secara polimorfik
+    public String laporanRingkas() {
+        String kesiapan = siapDisewakan() ? "SIAP" : "TIDAK SIAP";
+        return String.format("%-10s %-26s %-12s", kodeAlat, namaAlat, kesiapan);
+    }
+
+    public String deskripsi() {
+        return kodeAlat + " - " + namaAlat + " (Rp" + hargaSewaPerHari + "/hari, stok: " + stok + ")";
+    }
+
     public abstract double hitungBiayaPerawatan();
+
     public abstract boolean siapDisewakan();
-    
-    //Memeriksa apakah alat siap disewakan berdasarkan kondisi tertentu
+
+    public String getKodeAlat() {
+        return kodeAlat;
+    }
+
     public String getNamaAlat() {
         return namaAlat;
     }
+
     public double getHargaSewaPerHari() {
         return hargaSewaPerHari;
     }
-    
+
     public int getStok() {
         return stok;
-    }
-    
-    public String getKodeAlat() {
-        return kodeAlat;
     }
 
     public String getStatus() {
