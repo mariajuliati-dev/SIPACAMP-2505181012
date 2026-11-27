@@ -1,18 +1,15 @@
 package paket;
+import eksepsi.*;
 import entity.AlatCamping;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  *
  * @author Maria
  */
-/**
- * Dibantu oleh AI untuk menyusun kelas generic PaketCamping dengan batas tipe
- * extends AlatCamping dan implementasi Iterable untuk manajemen paket sewa.
- */
-
 public class PaketCamping<T extends AlatCamping> implements Iterable<T> {
     private final String namaPaket;
     private final int maksJenisAlat;
@@ -23,11 +20,21 @@ public class PaketCamping<T extends AlatCamping> implements Iterable<T> {
         this.maksJenisAlat = maksJenisAlat;
     }
 
-    public boolean masukkanAlat(T alat) {
-        if (daftarIsi.size() >= maksJenisAlat || !alat.siapDisewakan()) {
-            return false;
+    public void masukkanAlat(T alat) throws AlatTidakSiapSewaException, StokSewaKurangException {
+        if (alat == null) {
+            throw new AlatTidakSiapSewaException("Tidak diketahui",
+                    "data perlengkapan camping belum dipilih");
         }
-        return daftarIsi.add(alat);
+        if (!alat.siapDisewakan()) {
+            throw new AlatTidakSiapSewaException(alat.getNamaAlat(),
+                    "kondisi atau stok belum siap disewakan");
+        }
+        if (daftarIsi.size() >= maksJenisAlat) {
+            throw new StokSewaKurangException("Paket \"" + namaPaket + "\"",
+                    daftarIsi.size() + 1, maksJenisAlat);
+        }
+
+        daftarIsi.add(alat);
     }
 
     public double hitungTotalTarifPaket() {
@@ -50,5 +57,4 @@ public class PaketCamping<T extends AlatCamping> implements Iterable<T> {
     public Iterator<T> iterator() {
         return daftarIsi.iterator();
     }
-
 }
