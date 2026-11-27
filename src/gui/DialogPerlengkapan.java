@@ -1,7 +1,5 @@
 package gui;
-import entity.AlatCamping;
-import entity.PeralatanMasak;
-import entity.Tenda;
+import entity.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -15,9 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 /**
+ * Dialog modal View untuk menambah atau mengubah data perlengkapan camping pada SIPACAMP.
  *
  * @author Maria
- */ 
+ */
 public class DialogPerlengkapan extends JDialog {
 
     private final JTextField fieldKode = new JTextField(14);
@@ -39,10 +38,10 @@ public class DialogPerlengkapan extends JDialog {
         super(induk, dataAwal == null ? "Tambah Perlengkapan Camping" : "Ubah Perlengkapan Camping", true);
         susunKomponen();
         pasangListener();
+        sesuaikanLabelTipe();
         if (dataAwal != null) {
             isiDataAwal(dataAwal);
         }
-        sesuaikanLabelTipe();
         pack();
         setLocationRelativeTo(induk);
     }
@@ -130,22 +129,7 @@ public class DialogPerlengkapan extends JDialog {
 
     private void prosesSimpan() {
         try {
-            String kode = fieldKode.getText().trim();
-            String nama = fieldNama.getText().trim();
-            double harga = Double.parseDouble(fieldHarga.getText().trim());
-            int stok = Integer.parseInt(fieldStok.getText().trim());
-            String status = (String) comboStatus.getSelectedItem();
-            String tipe = (String) comboTipe.getSelectedItem();
-
-            if ("PeralatanMasak".equals(tipe)) {
-                String bahan = fieldAtributSatu.getText().trim();
-                boolean bersih = parseYaTidak(fieldAtributDua.getText().trim());
-                hasilAlat = new PeralatanMasak(kode, nama, harga, stok, status, bahan, bersih);
-            } else {
-                int kapasitas = Integer.parseInt(fieldAtributSatu.getText().trim());
-                boolean pasakLengkap = parseYaTidak(fieldAtributDua.getText().trim());
-                hasilAlat = new Tenda(kode, nama, harga, stok, status, kapasitas, pasakLengkap);
-            }
+            hasilAlat = rakitAlatDariMasukan();
             dispose();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(
@@ -155,6 +139,25 @@ public class DialogPerlengkapan extends JDialog {
                 JOptionPane.WARNING_MESSAGE
             );
         }
+    }
+
+    private AlatCamping rakitAlatDariMasukan() {
+        String kode = fieldKode.getText().trim();
+        String nama = fieldNama.getText().trim();
+        double harga = Double.parseDouble(fieldHarga.getText().trim());
+        int stok = Integer.parseInt(fieldStok.getText().trim());
+        String status = (String) comboStatus.getSelectedItem();
+        String tipe = (String) comboTipe.getSelectedItem();
+
+        if ("PeralatanMasak".equals(tipe)) {
+            String bahan = fieldAtributSatu.getText().trim();
+            boolean bersih = parseYaTidak(fieldAtributDua.getText().trim());
+            return new PeralatanMasak(kode, nama, harga, stok, status, bahan, bersih);
+        }
+
+        int kapasitas = Integer.parseInt(fieldAtributSatu.getText().trim());
+        boolean pasakLengkap = parseYaTidak(fieldAtributDua.getText().trim());
+        return new Tenda(kode, nama, harga, stok, status, kapasitas, pasakLengkap);
     }
 
     private boolean parseYaTidak(String nilai) {

@@ -1,5 +1,5 @@
 package gui;
-import basisdata.*;
+import basisdata.PerlengkapanDAO;
 import eksepsi.*;
 import entity.AlatCamping;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 /**
+ * Controller pada arsitektur MVC SIPACAMP yang mengelola alur pemuatan,
+ * validasi, pencarian, pengurutan, dan operasi CRUD perlengkapan camping.
  *
  * @author Maria
  */
@@ -54,18 +56,25 @@ public class KontrolPerlengkapan {
         return cocok;
     }
 
-    public void tambahPerlengkapan(AlatCamping alat) throws KesalahanPenyimpananException {
+    public void tambahPerlengkapan(AlatCamping alat)
+            throws KesalahanPenyimpananException, InputCampingTidakValidException {
         validasiAlat(alat);
         daoPerlengkapan.tambah(alat);
-        cachePerlengkapan.removeIf(item -> item.getKodeAlat().equalsIgnoreCase(alat.getKodeAlat()));
+        String kodeBaru = alat.getKodeAlat().trim();
+        cachePerlengkapan.removeIf(
+            item -> item.getKodeAlat() != null && item.getKodeAlat().equalsIgnoreCase(kodeBaru)
+        );
         cachePerlengkapan.add(alat);
     }
 
-    public void perbaruiPerlengkapan(AlatCamping alat) throws KesalahanPenyimpananException {
+    public void perbaruiPerlengkapan(AlatCamping alat)
+            throws KesalahanPenyimpananException, InputCampingTidakValidException {
         validasiAlat(alat);
         daoPerlengkapan.ubah(alat);
+        String kodeTarget = alat.getKodeAlat().trim();
         for (int i = 0; i < cachePerlengkapan.size(); i++) {
-            if (cachePerlengkapan.get(i).getKodeAlat().equalsIgnoreCase(alat.getKodeAlat())) {
+            AlatCamping item = cachePerlengkapan.get(i);
+            if (item.getKodeAlat() != null && item.getKodeAlat().equalsIgnoreCase(kodeTarget)) {
                 cachePerlengkapan.set(i, alat);
                 return;
             }
@@ -77,8 +86,11 @@ public class KontrolPerlengkapan {
         if (alat == null || alat.getKodeAlat() == null || alat.getKodeAlat().isBlank()) {
             throw new KesalahanPenyimpananException("Data perlengkapan yang akan dihapus tidak valid.");
         }
-        daoPerlengkapan.hapus(alat.getKodeAlat());
-        cachePerlengkapan.removeIf(item -> item.getKodeAlat().equalsIgnoreCase(alat.getKodeAlat()));
+        String kodeHapus = alat.getKodeAlat().trim();
+        daoPerlengkapan.hapus(kodeHapus);
+        cachePerlengkapan.removeIf(
+            item -> item.getKodeAlat() != null && item.getKodeAlat().equalsIgnoreCase(kodeHapus)
+        );
     }
 
     public int totalItem() {
@@ -88,28 +100,31 @@ public class KontrolPerlengkapan {
     public int totalSiapDisewakan() {
         int hitung = 0;
         for (AlatCamping alat : cachePerlengkapan) {
-            if (alat.siapDisewakan()) {
+            if (alat != null && alat.siapDisewakan()) {
                 hitung++;
             }
         }
         return hitung;
     }
 
-    private void validasiAlat(AlatCamping alat) throws KesalahanPenyimpananException {
+    private void validasiAlat(AlatCamping alat) throws InputCampingTidakValidException {
         if (alat == null) {
-            throw new KesalahanPenyimpananException("Objek perlengkapan tidak boleh kosong.");
+            throw new InputCampingTidakValidException("Perlengkapan", "Objek perlengkapan tidak boleh kosong.");
         }
         if (alat.getKodeAlat() == null || alat.getKodeAlat().isBlank()) {
-            throw new KesalahanPenyimpananException("Kode alat wajib diisi.");
+            throw new InputCampingTidakValidException("Kode alat", "Kode alat wajib diisi.");
         }
         if (alat.getNamaAlat() == null || alat.getNamaAlat().isBlank()) {
-            throw new KesalahanPenyimpananException("Nama perlengkapan wajib diisi.");
+            throw new InputCampingTidakValidException("Nama alat", "Nama perlengkapan wajib diisi.");
         }
         if (alat.getHargaSewaPerHari() <= 0) {
-            throw new KesalahanPenyimpananException("Harga sewa per hari harus lebih dari 0.");
+            throw new InputCampingTidakValidException(
+                "Tarif sewa per hari",
+                "Harga sewa per hari harus lebih dari 0."
+            );
         }
         if (alat.getStok() < 0) {
-            throw new KesalahanPenyimpananException("Stok tidak boleh bernilai negatif.");
+            throw new InputCampingTidakValidException("Stok", "Stok tidak boleh bernilai negatif.");
         }
     }
 }

@@ -1,4 +1,5 @@
 package entity;
+import aturan.AturanDendaCamping;
 import eksepsi.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -8,6 +9,7 @@ import java.util.List;
 
 /**
  * Merepresentasikan transaksi persewaan perlengkapan camping pada SIPACAMP.
+ *
  * @author Maria
  */
 public class Persewaan {
@@ -73,6 +75,14 @@ public class Persewaan {
         return Math.max(0L, selisih);
     }
 
+    // Menghitung denda keterlambatan berdasarkan strategi aturan yang diberikan dari luar
+    public long hitungDenda(AturanDendaCamping aturan) {
+        if (aturan == null) {
+            throw new IllegalArgumentException("Aturan denda tidak boleh kosong.");
+        }
+        return aturan.hitungDenda(hitungHariTerlambat());
+    }
+
     // Menghitung akumulasi total biaya sewa seluruh item dikalikan durasi hari
     public double hitungTotalBiaya() {
         double totalPerHari = 0;
@@ -80,6 +90,10 @@ public class Persewaan {
             totalPerHari += detail.getSubTotal();
         }
         return totalPerHari * hitungDurasiHari();
+    }
+
+    public double hitungTotalDenganDenda(AturanDendaCamping aturan) {
+        return hitungTotalBiaya() + hitungDenda(aturan);
     }
 
     public String getIdPersewaan() {

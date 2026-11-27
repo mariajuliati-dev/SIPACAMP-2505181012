@@ -3,6 +3,7 @@ import entity.AlatCamping;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import layanan.PemantauPersewaan;
 /**
+ * Jendela utama View pada arsitektur MVC SIPACAMP yang menampilkan katalog
+ * perlengkapan camping dan menghubungkan aksi pengguna ke KontrolPerlengkapan.
  *
  * @author Maria
  */
@@ -40,7 +43,7 @@ public class JendelaUtama extends JFrame {
         pemantau.mulai();
         muatDataAsync();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(920, 540);
         setLocationRelativeTo(null);
     }
@@ -92,7 +95,7 @@ public class JendelaUtama extends JFrame {
                     modelTabel.muatData(get());
                     perbaruiRingkasanStatus();
                 } catch (Exception ex) {
-                    tampilkanPesanGalat("Gagal memuat data: " + ex.getMessage());
+                    tampilkanPesanGalat("Gagal memuat data: " + ambilPesanAsli(ex));
                 }
             }
         }.execute();
@@ -164,7 +167,7 @@ public class JendelaUtama extends JFrame {
                     modelTabel.muatData(get());
                     perbaruiRingkasanStatus();
                 } catch (Exception ex) {
-                    tampilkanPesanGalat("Gagal menyimpan data: " + ex.getMessage());
+                    tampilkanPesanGalat("Gagal menyimpan data: " + ambilPesanAsli(ex));
                 }
             }
         }.execute();
@@ -185,7 +188,7 @@ public class JendelaUtama extends JFrame {
                     modelTabel.muatData(get());
                     perbaruiRingkasanStatus();
                 } catch (Exception ex) {
-                    tampilkanPesanGalat("Gagal menghapus data: " + ex.getMessage());
+                    tampilkanPesanGalat("Gagal menghapus data: " + ambilPesanAsli(ex));
                 }
             }
         }.execute();
@@ -195,6 +198,13 @@ public class JendelaUtama extends JFrame {
         labelStatus.setText(
             "Total item: " + kontrol.totalItem() + " | Siap disewakan: " + kontrol.totalSiapDisewakan()
         );
+    }
+
+    private String ambilPesanAsli(Exception ex) {
+        if (ex instanceof ExecutionException && ex.getCause() != null) {
+            return ex.getCause().getMessage();
+        }
+        return ex.getMessage();
     }
 
     private void tampilkanPesanGalat(String pesan) {
