@@ -1,10 +1,11 @@
 package entity;
-
+import java.io.Serializable;
 /**
  *
  * @author Maria
  */
-public class PeralatanMasak extends AlatCamping implements InfoKelayakan {
+public class PeralatanMasak extends AlatCamping implements InfoKelayakan, Serializable {
+    private static final long serialVersionUID = 1L;
     private String bahanMaterial;
     private boolean kebersihanTerjaga;
 
@@ -36,5 +37,13 @@ public class PeralatanMasak extends AlatCamping implements InfoKelayakan {
     @Override
     public boolean cekKondisiSiapPakai() {
         return siapDisewakan();
+    }
+    
+    public String getBahanMaterial() {
+        return bahanMaterial;
+    }
+
+    public boolean isKebersihanTerjaga() {
+        return kebersihanTerjaga;
     }
 }

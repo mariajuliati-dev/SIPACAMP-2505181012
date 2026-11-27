@@ -1,0 +1,11 @@
+DAFTAR PERLENGKAPAN CAMPING SIPACAMP
+Tanggal cetak: 2026-11-27
+
+KODE       NAMA PERLENGKAPAN          TIPE               STATUS         STOK
+------------------------------------------------------------------------------
+TND-001    Tenda Dome 4 Orang         Tenda              Tersedia          3
+MSK-001    Nesting Cooking Set        Peralatan Masak    Tersedia          5
+TND-002    Tenda Ultralight 2 Orang   Tenda              Tersedia          6
+TND-003    Tenda Basecamp 6 Orang     Tenda              Tersedia          2
+------------------------------------------------------------------------------
+Total jenis perlengkapan: 4

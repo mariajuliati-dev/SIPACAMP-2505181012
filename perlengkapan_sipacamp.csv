@@ -1,0 +1,5 @@
+kode_alat,nama_alat,tipe,harga_sewa_per_hari,stok,status
+"TND-001","Tenda Dome 4 Orang","TENDA",75000,3,"Tersedia"
+"MSK-001","Nesting Cooking Set","PERALATAN_MASAK",25000,5,"Tersedia"
+"TND-002","Tenda Ultralight 2 Orang","TENDA",50000,6,"Tersedia"
+"TND-003","Tenda Basecamp 6 Orang","TENDA",90000,2,"Tersedia"

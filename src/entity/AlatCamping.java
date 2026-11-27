@@ -1,5 +1,5 @@
 package entity;
-
+import java.io.Serializable;
 /**
  *
  * @author Maria
@@ -7,7 +7,9 @@ package entity;
 /*
  * Dibantu oleh AI untuk menyusun dokumentasi method dan struktur abstract class.
  */
-public abstract class AlatCamping {
+
+public abstract class AlatCamping implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected String kodeAlat;
     protected String namaAlat;
     protected double hargaSewaPerHari;
@@ -31,10 +33,18 @@ public abstract class AlatCamping {
         return namaAlat;
     }
     public double getHargaSewaPerHari() {
-    return hargaSewaPerHari;
+        return hargaSewaPerHari;
     }
     
     public int getStok() {
-    return stok;
+        return stok;
+    }
+    
+    public String getKodeAlat() {
+        return kodeAlat;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
